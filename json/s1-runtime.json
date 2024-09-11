@@ -1,0 +1,281 @@
+{
+    "target": "bmv2",
+    "p4info": "build/MultiAggregation.p4.p4info.txt",
+    "bmv2_json": "build/MultiAggregation.json",
+    "table_entries": [
+      {
+        "table": "MyIngress.ipv4_lpm",
+        "default_action": true,
+        "action_name": "MyIngress.drop",
+        "action_params": {}
+      },      
+      {
+        "table": "MyIngress.ipv4_lpm",
+        "match": {
+          "meta.dropflag":0,
+          "meta.isACK":1
+        },
+        "action_name": "MyIngress.multicast",
+        "action_params": {
+          "mcast_grp": 1
+        }
+      },
+      {
+        "table": "MyIngress.ipv4_lpm",
+        "match": {
+          "meta.dropflag":0,
+          "meta.isACK":0,
+          "hdr.ipv4.dstAddr": [
+            "10.0.0.1",
+            32
+          ]
+        },
+        "action_name": "MyIngress.ipv4_forward",
+        "action_params": {
+          "dstAddr":"08:00:00:00:01:11",
+          "port": 1
+        }
+      },
+      {
+        "table": "MyIngress.ipv4_lpm",
+        "match": {
+          "meta.dropflag":0,
+          "meta.isACK":0,
+          "hdr.ipv4.dstAddr": [
+            "10.0.0.2",
+            32
+          ]
+        },
+        "action_name": "MyIngress.ipv4_forward",
+        "action_params": {
+          "dstAddr":"08:00:00:00:02:22",
+          "port": 2
+        }
+      },      
+      {
+        "table": "MyIngress.ipv4_lpm",
+        "match": {
+          "meta.dropflag":0,
+          "meta.isACK":0,
+          "hdr.ipv4.dstAddr": [
+            "10.0.0.3",
+            32
+          ]
+        },
+        "action_name": "MyIngress.ipv4_forward",
+        "action_params": {
+          "dstAddr":"08:00:00:00:03:33",
+          "port": 3
+        }
+      },
+      {
+        "table": "MyIngress.checker.readMultimd",
+        "default_action": true,
+        "action_name": "NoAction",
+        "action_params": {}
+      },      
+      {
+        "table": "MyIngress.checker.readMultimd",
+        "match": {
+          "hdr.Multi.isACK":0
+        },
+        "action_name": "MyIngress.checker.read_Multi_md",
+        "action_params": {}
+      },
+      {
+        "table": "MyIngress.pro1.add",
+        "default_action": true,
+        "action_name": "NoAction",
+        "action_params": {}
+      },
+      {
+        "table": "MyIngress.pro2.add",
+        "default_action": true,
+        "action_name": "NoAction",
+        "action_params": {}
+      },      {
+        "table": "MyIngress.pro3.add",
+        "default_action": true,
+        "action_name": "NoAction",
+        "action_params": {}
+      },      {
+        "table": "MyIngress.pro4.add",
+        "default_action": true,
+        "action_name": "NoAction",
+        "action_params": {}
+      },
+      {
+        "table": "MyIngress.pro1.add",
+        "match": {
+          "meta.worker_bitmap_before": [
+            0,
+            0
+          ],
+          "meta.ifaggregation":0
+        },
+        "priority":2,
+        "action_name": "MyIngress.pro1.write_action",
+        "action_params": {}
+      },
+      {
+        "table": "MyIngress.pro2.add",
+        "match": {
+          "meta.worker_bitmap_before": [
+            0,
+            0
+          ],
+          "meta.ifaggregation":0
+        },
+        "priority":2,
+        "action_name": "MyIngress.pro2.write_action",
+        "action_params": {}
+      },
+      {
+        "table": "MyIngress.pro3.add",
+        "match": {
+          "meta.worker_bitmap_before": [
+            0,
+            0
+          ],
+          "meta.ifaggregation":0
+        },
+        "priority":2,
+        "action_name": "MyIngress.pro3.write_action",
+        "action_params": {}
+      },
+      {
+        "table": "MyIngress.pro4.add",
+        "match": {
+          "meta.worker_bitmap_before": [
+            0,
+            0
+          ],
+          "meta.ifaggregation":0
+        },
+        "priority":2,
+        "action_name": "MyIngress.pro4.write_action",
+        "action_params": {}
+      },
+      {
+        "table": "MyIngress.pro1.add",
+        "match": {
+          "meta.worker_bitmap_before": [
+            1,
+            4294967294
+          ],
+          "meta.ifaggregation":0
+        },
+        "priority":1,
+        "action_name": "MyIngress.pro1.sum_read_action",
+        "action_params": {}
+      },  
+      {
+        "table": "MyIngress.pro2.add",
+        "match": {
+          "meta.worker_bitmap_before": [
+            1,
+            4294967294
+          ],
+          "meta.ifaggregation":0
+        },
+        "priority":1,
+        "action_name": "MyIngress.pro2.sum_read_action",
+        "action_params": {}
+      },      
+      {
+        "table": "MyIngress.pro3.add",
+        "match": {
+          "meta.worker_bitmap_before": [
+            1,
+            4294967294
+          ],
+          "meta.ifaggregation":0
+        },
+        "priority":1,
+        "action_name": "MyIngress.pro3.sum_read_action",
+        "action_params": {}
+      },     
+      {
+        "table": "MyIngress.pro4.add",
+        "match": {
+          "meta.worker_bitmap_before": [
+            1,
+            4294967294
+          ],
+          "meta.ifaggregation":0
+        },
+        "priority":1,
+        "action_name": "MyIngress.pro4.sum_read_action",
+        "action_params": {}
+      },   
+      {
+        "table": "MyIngress.pro1.add",
+        "match": {
+
+          "meta.ifaggregation":1
+        },
+        "priority":3,
+        "action_name": "MyIngress.pro1.read_action",
+        "action_params": {}
+      },
+      {
+        "table": "MyIngress.pro2.add",
+        "match": {
+
+          "meta.ifaggregation":1
+        },
+        "priority":3,
+        "action_name": "MyIngress.pro2.read_action",
+        "action_params": {}
+      },      
+      {
+        "table": "MyIngress.pro3.add",
+        "match": {
+
+          "meta.ifaggregation":1
+        },
+        "priority":3,
+        "action_name": "MyIngress.pro3.read_action",
+        "action_params": {}
+      },      
+      {
+        "table": "MyIngress.pro4.add",
+        "match": {
+
+          "meta.ifaggregation":1
+        },
+        "priority":3,
+        "action_name": "MyIngress.pro4.read_action",
+        "action_params": {}
+      },
+      {
+        "table": "MyIngress.updateCABer.updateAll",
+        "default_action": true,
+        "action_name": "NoAction",
+        "action_params": {}
+      },      
+      {
+        "table": "MyIngress.updateCABer.updateAll",
+        "match": {
+          "hdr.Multi.isACK":0
+        },
+        "action_name": "MyIngress.updateCABer.update_All",
+        "action_params": {}
+      }
+    ],
+    "multicast_group_entries": [
+      {
+        "multicast_group_id": 1,
+        "replicas": [
+          {
+            "egress_port": 1,
+            "instance": 1
+          },
+          {
+            "egress_port": 2,
+            "instance": 1
+          }
+        ]
+      }
+    ]
+  }

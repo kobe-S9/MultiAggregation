@@ -1,0 +1,479 @@
+pkg_info {
+  arch: "v1model"
+}
+tables {
+  preamble {
+    id: 37375156
+    name: "MyIngress.ipv4_lpm"
+    alias: "ipv4_lpm"
+  }
+  match_fields {
+    id: 1
+    name: "meta.dropflag"
+    bitwidth: 1
+    match_type: EXACT
+  }
+  match_fields {
+    id: 2
+    name: "meta.isACK"
+    bitwidth: 1
+    match_type: EXACT
+  }
+  match_fields {
+    id: 3
+    name: "hdr.ipv4.dstAddr"
+    bitwidth: 32
+    match_type: LPM
+  }
+  action_refs {
+    id: 28792405
+  }
+  action_refs {
+    id: 25652968
+  }
+  action_refs {
+    id: 19198950
+  }
+  size: 1024
+}
+tables {
+  preamble {
+    id: 42446103
+    name: "MyIngress.checker.readMultimd"
+    alias: "readMultimd"
+  }
+  match_fields {
+    id: 1
+    name: "hdr.Multi.isACK"
+    bitwidth: 1
+    match_type: EXACT
+  }
+  action_refs {
+    id: 28091475
+  }
+  action_refs {
+    id: 21257015
+  }
+  size: 1024
+}
+tables {
+  preamble {
+    id: 44454261
+    name: "MyIngress.pro1.add"
+    alias: "pro1.add"
+  }
+  match_fields {
+    id: 1
+    name: "meta.worker_bitmap_before"
+    bitwidth: 32
+    match_type: RANGE
+  }
+  match_fields {
+    id: 2
+    name: "meta.ifaggregation"
+    bitwidth: 32
+    match_type: EXACT
+  }
+  action_refs {
+    id: 17989429
+  }
+  action_refs {
+    id: 24990793
+  }
+  action_refs {
+    id: 22555032
+  }
+  action_refs {
+    id: 21257015
+  }
+  size: 1024
+}
+tables {
+  preamble {
+    id: 43914428
+    name: "MyIngress.pro2.add"
+    alias: "pro2.add"
+  }
+  match_fields {
+    id: 1
+    name: "meta.worker_bitmap_before"
+    bitwidth: 32
+    match_type: RANGE
+  }
+  match_fields {
+    id: 2
+    name: "meta.ifaggregation"
+    bitwidth: 32
+    match_type: EXACT
+  }
+  action_refs {
+    id: 22799880
+  }
+  action_refs {
+    id: 26001689
+  }
+  action_refs {
+    id: 21067171
+  }
+  action_refs {
+    id: 21257015
+  }
+  size: 1024
+}
+tables {
+  preamble {
+    id: 47255890
+    name: "MyIngress.pro3.add"
+    alias: "pro3.add"
+  }
+  match_fields {
+    id: 1
+    name: "meta.worker_bitmap_before"
+    bitwidth: 32
+    match_type: RANGE
+  }
+  match_fields {
+    id: 2
+    name: "meta.ifaggregation"
+    bitwidth: 32
+    match_type: EXACT
+  }
+  action_refs {
+    id: 30027198
+  }
+  action_refs {
+    id: 16890780
+  }
+  action_refs {
+    id: 27286092
+  }
+  action_refs {
+    id: 21257015
+  }
+  size: 1024
+}
+tables {
+  preamble {
+    id: 48334492
+    name: "MyIngress.pro4.add"
+    alias: "pro4.add"
+  }
+  match_fields {
+    id: 1
+    name: "meta.worker_bitmap_before"
+    bitwidth: 32
+    match_type: RANGE
+  }
+  match_fields {
+    id: 2
+    name: "meta.ifaggregation"
+    bitwidth: 32
+    match_type: EXACT
+  }
+  action_refs {
+    id: 21536026
+  }
+  action_refs {
+    id: 17461024
+  }
+  action_refs {
+    id: 31814808
+  }
+  action_refs {
+    id: 21257015
+  }
+  size: 1024
+}
+tables {
+  preamble {
+    id: 35204210
+    name: "MyIngress.updateCABer.updateAll"
+    alias: "updateAll"
+  }
+  match_fields {
+    id: 1
+    name: "hdr.Multi.isACK"
+    bitwidth: 1
+    match_type: EXACT
+  }
+  action_refs {
+    id: 30732822
+  }
+  action_refs {
+    id: 21257015
+  }
+  size: 1024
+}
+tables {
+  preamble {
+    id: 44637761
+    name: "MyIngress.updateCABer.sendResult"
+    alias: "sendResult"
+  }
+  match_fields {
+    id: 1
+    name: "hdr.Multi.isACK"
+    bitwidth: 1
+    match_type: EXACT
+  }
+  action_refs {
+    id: 24296065
+  }
+  size: 1024
+}
+actions {
+  preamble {
+    id: 21257015
+    name: "NoAction"
+    alias: "NoAction"
+    annotations: "@noWarn(\"unused\")"
+  }
+}
+actions {
+  preamble {
+    id: 25652968
+    name: "MyIngress.drop"
+    alias: "drop"
+  }
+}
+actions {
+  preamble {
+    id: 28792405
+    name: "MyIngress.ipv4_forward"
+    alias: "ipv4_forward"
+  }
+  params {
+    id: 1
+    name: "dstAddr"
+    bitwidth: 48
+  }
+  params {
+    id: 2
+    name: "port"
+    bitwidth: 9
+  }
+}
+actions {
+  preamble {
+    id: 19198950
+    name: "MyIngress.multicast"
+    alias: "multicast"
+  }
+  params {
+    id: 1
+    name: "mcast_grp"
+    bitwidth: 16
+  }
+}
+actions {
+  preamble {
+    id: 28091475
+    name: "MyIngress.checker.read_Multi_md"
+    alias: "read_Multi_md"
+  }
+}
+actions {
+  preamble {
+    id: 17989429
+    name: "MyIngress.pro1.read_action"
+    alias: "pro1.read_action"
+  }
+}
+actions {
+  preamble {
+    id: 24990793
+    name: "MyIngress.pro1.write_action"
+    alias: "pro1.write_action"
+  }
+}
+actions {
+  preamble {
+    id: 22555032
+    name: "MyIngress.pro1.sum_read_action"
+    alias: "pro1.sum_read_action"
+  }
+}
+actions {
+  preamble {
+    id: 22799880
+    name: "MyIngress.pro2.read_action"
+    alias: "pro2.read_action"
+  }
+}
+actions {
+  preamble {
+    id: 26001689
+    name: "MyIngress.pro2.write_action"
+    alias: "pro2.write_action"
+  }
+}
+actions {
+  preamble {
+    id: 21067171
+    name: "MyIngress.pro2.sum_read_action"
+    alias: "pro2.sum_read_action"
+  }
+}
+actions {
+  preamble {
+    id: 30027198
+    name: "MyIngress.pro3.read_action"
+    alias: "pro3.read_action"
+  }
+}
+actions {
+  preamble {
+    id: 16890780
+    name: "MyIngress.pro3.write_action"
+    alias: "pro3.write_action"
+  }
+}
+actions {
+  preamble {
+    id: 27286092
+    name: "MyIngress.pro3.sum_read_action"
+    alias: "pro3.sum_read_action"
+  }
+}
+actions {
+  preamble {
+    id: 21536026
+    name: "MyIngress.pro4.read_action"
+    alias: "pro4.read_action"
+  }
+}
+actions {
+  preamble {
+    id: 17461024
+    name: "MyIngress.pro4.write_action"
+    alias: "pro4.write_action"
+  }
+}
+actions {
+  preamble {
+    id: 31814808
+    name: "MyIngress.pro4.sum_read_action"
+    alias: "pro4.sum_read_action"
+  }
+}
+actions {
+  preamble {
+    id: 30732822
+    name: "MyIngress.updateCABer.update_All"
+    alias: "update_All"
+  }
+}
+actions {
+  preamble {
+    id: 24296065
+    name: "MyIngress.updateCABer.send_Result"
+    alias: "send_Result"
+  }
+}
+registers {
+  preamble {
+    id: 379669862
+    name: "bitmap_reg"
+    alias: "bitmap_reg"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 32
+      }
+    }
+  }
+  size: 4000
+}
+registers {
+  preamble {
+    id: 374996181
+    name: "counter_reg"
+    alias: "counter_reg"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 32
+      }
+    }
+  }
+  size: 4000
+}
+registers {
+  preamble {
+    id: 371502125
+    name: "ECN_reg"
+    alias: "ECN_reg"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 1
+      }
+    }
+  }
+  size: 10
+}
+registers {
+  preamble {
+    id: 371616774
+    name: "MyIngress.pro1.values"
+    alias: "pro1.values"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 8
+      }
+    }
+  }
+  size: 4000
+}
+registers {
+  preamble {
+    id: 369396565
+    name: "MyIngress.pro2.values"
+    alias: "pro2.values"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 8
+      }
+    }
+  }
+  size: 4000
+}
+registers {
+  preamble {
+    id: 372379196
+    name: "MyIngress.pro3.values"
+    alias: "pro3.values"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 8
+      }
+    }
+  }
+  size: 4000
+}
+registers {
+  preamble {
+    id: 384771820
+    name: "MyIngress.pro4.values"
+    alias: "pro4.values"
+  }
+  type_spec {
+    bitstring {
+      bit {
+        bitwidth: 8
+      }
+    }
+  }
+  size: 4000
+}
+type_info {
+}

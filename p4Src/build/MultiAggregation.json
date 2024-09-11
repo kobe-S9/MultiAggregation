@@ -1,0 +1,3357 @@
+{
+  "header_types" : [
+    {
+      "name" : "scalars_0",
+      "id" : 0,
+      "fields" : [
+        ["tmp", 32, false],
+        ["tmp_0", 32, false],
+        ["tmp_1", 32, false],
+        ["tmp_2", 32, false],
+        ["tmp_3", 32, false],
+        ["checker_bitmapR", 32, false],
+        ["checker_counterR", 32, false],
+        ["checker_ECNR", 1, false],
+        ["pro1_read_value", 8, false],
+        ["pro2_read_value", 8, false],
+        ["pro3_read_value", 8, false],
+        ["pro4_read_value", 8, false],
+        ["metadata.counterNow", 32, false],
+        ["metadata.index", 32, false],
+        ["metadata.valueIndex", 32, false],
+        ["metadata.worker_bitmap_before", 32, false],
+        ["metadata.ifaggregation", 32, false],
+        ["metadata.ECN", 1, false],
+        ["metadata.offset", 32, false],
+        ["metadata.dropflag", 1, false],
+        ["metadata.isACK", 1, false],
+        ["metadata.isHigh", 4, false],
+        ["metadata.ingress_port", 16, false],
+        ["metadata.egress_port", 16, false]
+      ]
+    },
+    {
+      "name" : "standard_metadata",
+      "id" : 1,
+      "fields" : [
+        ["ingress_port", 9, false],
+        ["egress_spec", 9, false],
+        ["egress_port", 9, false],
+        ["instance_type", 32, false],
+        ["packet_length", 32, false],
+        ["enq_timestamp", 32, false],
+        ["enq_qdepth", 19, false],
+        ["deq_timedelta", 32, false],
+        ["deq_qdepth", 19, false],
+        ["ingress_global_timestamp", 48, false],
+        ["egress_global_timestamp", 48, false],
+        ["mcast_grp", 16, false],
+        ["egress_rid", 16, false],
+        ["checksum_error", 1, false],
+        ["parser_error", 32, false],
+        ["priority", 3, false],
+        ["_padding", 3, false]
+      ]
+    },
+    {
+      "name" : "ethernet_t",
+      "id" : 2,
+      "fields" : [
+        ["dstAddr", 48, false],
+        ["srcAddr", 48, false],
+        ["etherType", 16, false]
+      ]
+    },
+    {
+      "name" : "ipv4_t",
+      "id" : 3,
+      "fields" : [
+        ["version", 4, false],
+        ["ihl", 4, false],
+        ["diffserv", 8, false],
+        ["totalLen", 16, false],
+        ["identification", 16, false],
+        ["flags", 3, false],
+        ["fragOffset", 13, false],
+        ["ttl", 8, false],
+        ["protocol", 8, false],
+        ["hdrChecksum", 16, false],
+        ["srcAddr", 32, false],
+        ["dstAddr", 32, false]
+      ]
+    },
+    {
+      "name" : "udp_t",
+      "id" : 4,
+      "fields" : [
+        ["sport", 16, false],
+        ["dport", 16, false],
+        ["length", 16, false],
+        ["checksum", 16, false]
+      ]
+    },
+    {
+      "name" : "Multi_h",
+      "id" : 5,
+      "fields" : [
+        ["bitmap", 32, false],
+        ["overflow", 1, false],
+        ["isResend", 1, false],
+        ["ECN", 1, false],
+        ["types", 4, false],
+        ["isACK", 1, false],
+        ["index", 32, false]
+      ]
+    },
+    {
+      "name" : "data_h",
+      "id" : 6,
+      "fields" : [
+        ["d00", 8, false],
+        ["d01", 8, false],
+        ["d02", 8, false],
+        ["d03", 8, false]
+      ]
+    }
+  ],
+  "headers" : [
+    {
+      "name" : "scalars",
+      "id" : 0,
+      "header_type" : "scalars_0",
+      "metadata" : true,
+      "pi_omit" : true
+    },
+    {
+      "name" : "standard_metadata",
+      "id" : 1,
+      "header_type" : "standard_metadata",
+      "metadata" : true,
+      "pi_omit" : true
+    },
+    {
+      "name" : "ethernet",
+      "id" : 2,
+      "header_type" : "ethernet_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "ipv4",
+      "id" : 3,
+      "header_type" : "ipv4_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "udp",
+      "id" : 4,
+      "header_type" : "udp_t",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "Multi",
+      "id" : 5,
+      "header_type" : "Multi_h",
+      "metadata" : false,
+      "pi_omit" : true
+    },
+    {
+      "name" : "data",
+      "id" : 6,
+      "header_type" : "data_h",
+      "metadata" : false,
+      "pi_omit" : true
+    }
+  ],
+  "header_stacks" : [],
+  "header_union_types" : [],
+  "header_unions" : [],
+  "header_union_stacks" : [],
+  "field_lists" : [],
+  "errors" : [
+    ["NoError", 0],
+    ["PacketTooShort", 1],
+    ["NoMatch", 2],
+    ["StackOutOfBounds", 3],
+    ["HeaderTooShort", 4],
+    ["ParserTimeout", 5],
+    ["ParserInvalidArgument", 6]
+  ],
+  "enums" : [],
+  "parsers" : [
+    {
+      "name" : "parser",
+      "id" : 0,
+      "init_state" : "start",
+      "parse_states" : [
+        {
+          "name" : "start",
+          "id" : 0,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "ethernet"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "type" : "hexstr",
+              "value" : "0x0800",
+              "mask" : null,
+              "next_state" : "parse_ipv4"
+            },
+            {
+              "type" : "default",
+              "value" : null,
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "etherType"]
+            }
+          ]
+        },
+        {
+          "name" : "parse_ipv4",
+          "id" : 1,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "ipv4"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "type" : "hexstr",
+              "value" : "0x11",
+              "mask" : null,
+              "next_state" : "parse_udp"
+            },
+            {
+              "type" : "default",
+              "value" : null,
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "protocol"]
+            }
+          ]
+        },
+        {
+          "name" : "parse_udp",
+          "id" : 2,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "udp"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "type" : "hexstr",
+              "value" : "0x3039",
+              "mask" : null,
+              "next_state" : "parse_Multi"
+            },
+            {
+              "type" : "default",
+              "value" : null,
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : [
+            {
+              "type" : "field",
+              "value" : ["udp", "dport"]
+            }
+          ]
+        },
+        {
+          "name" : "parse_Multi",
+          "id" : 3,
+          "parser_ops" : [
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "Multi"
+                }
+              ],
+              "op" : "extract"
+            },
+            {
+              "parameters" : [
+                {
+                  "type" : "regular",
+                  "value" : "data"
+                }
+              ],
+              "op" : "extract"
+            }
+          ],
+          "transitions" : [
+            {
+              "type" : "default",
+              "value" : null,
+              "mask" : null,
+              "next_state" : null
+            }
+          ],
+          "transition_key" : []
+        }
+      ]
+    }
+  ],
+  "parse_vsets" : [],
+  "deparsers" : [
+    {
+      "name" : "deparser",
+      "id" : 0,
+      "source_info" : {
+        "filename" : "MultiAggregation.p4",
+        "line" : 159,
+        "column" : 8,
+        "source_fragment" : "MyDeparser"
+      },
+      "order" : ["ethernet", "ipv4", "udp", "Multi", "data"],
+      "primitives" : []
+    }
+  ],
+  "meter_arrays" : [],
+  "counter_arrays" : [],
+  "register_arrays" : [
+    {
+      "name" : "MyIngress.pro1.values",
+      "id" : 0,
+      "source_info" : {
+        "filename" : "processor.p4",
+        "line" : 28,
+        "column" : 27,
+        "source_fragment" : "values"
+      },
+      "size" : 4000,
+      "bitwidth" : 8
+    },
+    {
+      "name" : "MyIngress.pro2.values",
+      "id" : 1,
+      "source_info" : {
+        "filename" : "processor.p4",
+        "line" : 28,
+        "column" : 27,
+        "source_fragment" : "values"
+      },
+      "size" : 4000,
+      "bitwidth" : 8
+    },
+    {
+      "name" : "MyIngress.pro3.values",
+      "id" : 2,
+      "source_info" : {
+        "filename" : "processor.p4",
+        "line" : 28,
+        "column" : 27,
+        "source_fragment" : "values"
+      },
+      "size" : 4000,
+      "bitwidth" : 8
+    },
+    {
+      "name" : "MyIngress.pro4.values",
+      "id" : 3,
+      "source_info" : {
+        "filename" : "processor.p4",
+        "line" : 28,
+        "column" : 27,
+        "source_fragment" : "values"
+      },
+      "size" : 4000,
+      "bitwidth" : 8
+    },
+    {
+      "name" : "bitmap_reg",
+      "id" : 4,
+      "source_info" : {
+        "filename" : "header.p4",
+        "line" : 15,
+        "column" : 24,
+        "source_fragment" : "bitmap_reg"
+      },
+      "size" : 4000,
+      "bitwidth" : 32
+    },
+    {
+      "name" : "counter_reg",
+      "id" : 5,
+      "source_info" : {
+        "filename" : "header.p4",
+        "line" : 16,
+        "column" : 24,
+        "source_fragment" : "counter_reg"
+      },
+      "size" : 4000,
+      "bitwidth" : 32
+    },
+    {
+      "name" : "ECN_reg",
+      "id" : 6,
+      "source_info" : {
+        "filename" : "header.p4",
+        "line" : 17,
+        "column" : 21,
+        "source_fragment" : "ECN_reg"
+      },
+      "size" : 10,
+      "bitwidth" : 1
+    }
+  ],
+  "calculations" : [
+    {
+      "name" : "calc",
+      "id" : 0,
+      "source_info" : {
+        "filename" : "MultiAggregation.p4",
+        "line" : 136,
+        "column" : 1,
+        "source_fragment" : "update_checksum( ..."
+      },
+      "algo" : "csum16",
+      "input" : [
+        {
+          "type" : "field",
+          "value" : ["ipv4", "version"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "ihl"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "diffserv"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "totalLen"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "identification"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "flags"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "fragOffset"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "ttl"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "protocol"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "srcAddr"]
+        },
+        {
+          "type" : "field",
+          "value" : ["ipv4", "dstAddr"]
+        }
+      ]
+    }
+  ],
+  "learn_lists" : [],
+  "actions" : [
+    {
+      "name" : "NoAction",
+      "id" : 0,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 1,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 2,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 3,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 4,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "NoAction",
+      "id" : 5,
+      "runtime_data" : [],
+      "primitives" : []
+    },
+    {
+      "name" : "MyIngress.drop",
+      "id" : 6,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "mark_to_drop",
+          "parameters" : [
+            {
+              "type" : "header",
+              "value" : "standard_metadata"
+            }
+          ],
+          "source_info" : {
+            "filename" : "MultiAggregation.p4",
+            "line" : 21,
+            "column" : 8,
+            "source_fragment" : "mark_to_drop(standard_metadata)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.ipv4_forward",
+      "id" : 7,
+      "runtime_data" : [
+        {
+          "name" : "dstAddr",
+          "bitwidth" : 48
+        },
+        {
+          "name" : "port",
+          "bitwidth" : 9
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "srcAddr"]
+            },
+            {
+              "type" : "field",
+              "value" : ["ethernet", "dstAddr"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "MultiAggregation.p4",
+            "line" : 27,
+            "column" : 8,
+            "source_fragment" : "hdr.ethernet.srcAddr = hdr.ethernet.dstAddr"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ethernet", "dstAddr"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "MultiAggregation.p4",
+            "line" : 30,
+            "column" : 8,
+            "source_fragment" : "hdr.ethernet.dstAddr = dstAddr"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["standard_metadata", "egress_spec"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 1
+            }
+          ],
+          "source_info" : {
+            "filename" : "MultiAggregation.p4",
+            "line" : 33,
+            "column" : 8,
+            "source_fragment" : "standard_metadata.egress_spec = port"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["ipv4", "ttl"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["ipv4", "ttl"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0xff"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "MultiAggregation.p4",
+            "line" : 36,
+            "column" : 8,
+            "source_fragment" : "hdr.ipv4.ttl = hdr.ipv4.ttl -1"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.multicast",
+      "id" : 8,
+      "runtime_data" : [
+        {
+          "name" : "mcast_grp",
+          "bitwidth" : 16
+        }
+      ],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["standard_metadata", "mcast_grp"]
+            },
+            {
+              "type" : "runtime_data",
+              "value" : 0
+            }
+          ],
+          "source_info" : {
+            "filename" : "MultiAggregation.p4",
+            "line" : 41,
+            "column" : 8,
+            "source_fragment" : "standard_metadata.mcast_grp = mcast_grp"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.checker.read_Multi_md",
+      "id" : 9,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.isHigh"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["Multi", "types"]
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0x08"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 21,
+            "column" : 8,
+            "source_fragment" : "meta.isHigh = hdr.Multi.types & 4w8"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.offset"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "&",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["Multi", "types"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x07"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 22,
+            "column" : 8,
+            "source_fragment" : "meta.offset = (bit<32>)(hdr.Multi.types & 4w7)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.index"]
+            },
+            {
+              "type" : "field",
+              "value" : ["Multi", "index"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 25,
+            "column" : 8,
+            "source_fragment" : "meta.index = hdr.Multi.index"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.isACK"]
+            },
+            {
+              "type" : "field",
+              "value" : ["Multi", "isACK"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 26,
+            "column" : 8,
+            "source_fragment" : "meta.isACK = hdr.Multi.isACK"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.valueIndex"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "<<",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["Multi", "index"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x2"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 27,
+            "column" : 8,
+            "source_fragment" : "meta.valueIndex = hdr.Multi.index * 4"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : "<<",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["Multi", "index"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0x2"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0xffffffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : "&",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["Multi", "types"]
+                              },
+                              "right" : {
+                                "type" : "hexstr",
+                                "value" : "0x07"
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0xffffffff"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 29,
+            "column" : 33,
+            "source_fragment" : "meta.valueIndex+meta.offset"
+          }
+        },
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "checker_bitmapR"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "bitmap_reg"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 29,
+            "column" : 8,
+            "source_fragment" : "bitmap_reg.read(bitmapR, meta.valueIndex+meta.offset)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.worker_bitmap_before"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "checker_bitmapR"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 30,
+            "column" : 8,
+            "source_fragment" : "meta.worker_bitmap_before = bitmapR"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.ifaggregation"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["scalars", "checker_bitmapR"]
+                  },
+                  "right" : {
+                    "type" : "field",
+                    "value" : ["Multi", "bitmap"]
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 31,
+            "column" : 8,
+            "source_fragment" : "meta.ifaggregation = bitmapR & hdr.Multi.bitmap"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_0"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : "+",
+                              "left" : {
+                                "type" : "expression",
+                                "value" : {
+                                  "op" : "&",
+                                  "left" : {
+                                    "type" : "expression",
+                                    "value" : {
+                                      "op" : "<<",
+                                      "left" : {
+                                        "type" : "field",
+                                        "value" : ["Multi", "index"]
+                                      },
+                                      "right" : {
+                                        "type" : "hexstr",
+                                        "value" : "0x2"
+                                      }
+                                    }
+                                  },
+                                  "right" : {
+                                    "type" : "hexstr",
+                                    "value" : "0xffffffff"
+                                  }
+                                }
+                              },
+                              "right" : {
+                                "type" : "expression",
+                                "value" : {
+                                  "op" : "&",
+                                  "left" : {
+                                    "type" : "expression",
+                                    "value" : {
+                                      "op" : "&",
+                                      "left" : {
+                                        "type" : "field",
+                                        "value" : ["Multi", "types"]
+                                      },
+                                      "right" : {
+                                        "type" : "hexstr",
+                                        "value" : "0x07"
+                                      }
+                                    }
+                                  },
+                                  "right" : {
+                                    "type" : "hexstr",
+                                    "value" : "0xffffffff"
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0xffffffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x00000004"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 33,
+            "column" : 35,
+            "source_fragment" : "meta.valueIndex+meta.offset+4"
+          }
+        },
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "checker_counterR"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "counter_reg"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_0"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 33,
+            "column" : 8,
+            "source_fragment" : "counter_reg.read(counterR, meta.valueIndex+meta.offset+4)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.counterNow"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "checker_counterR"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 34,
+            "column" : 8,
+            "source_fragment" : "meta.counterNow = counterR"
+          }
+        },
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "checker_ECNR"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "ECN_reg"
+            },
+            {
+              "type" : "field",
+              "value" : ["Multi", "index"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 36,
+            "column" : 8,
+            "source_fragment" : "ECN_reg.read(ECNR, meta.index)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.ECN"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "checker_ECNR"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 37,
+            "column" : 8,
+            "source_fragment" : "meta.ECN = ECNR"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.pro1.read_action",
+      "id" : 10,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.valueIndex"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["scalars", "metadata.valueIndex"]
+                      },
+                      "right" : {
+                        "type" : "field",
+                        "value" : ["scalars", "metadata.offset"]
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 31,
+            "column" : 8,
+            "source_fragment" : "meta.valueIndex = meta.valueIndex + meta.offset"
+          }
+        },
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["data", "d00"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.pro1.values"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.valueIndex"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 32,
+            "column" : 8,
+            "source_fragment" : "values.read(data, (bit<32>)meta.valueIndex)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.pro1.write_action",
+      "id" : 11,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.pro1.values"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.valueIndex"]
+            },
+            {
+              "type" : "field",
+              "value" : ["data", "d00"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 35,
+            "column" : 8,
+            "source_fragment" : "values.write((bit<32>)meta.valueIndex, data)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.pro1.sum_read_action",
+      "id" : 12,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "pro1_read_value"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.pro1.values"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.valueIndex"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 40,
+            "column" : 8,
+            "source_fragment" : "values.read(read_value, (bit<32>)meta.valueIndex)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["data", "d00"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["scalars", "pro1_read_value"]
+                      },
+                      "right" : {
+                        "type" : "field",
+                        "value" : ["data", "d00"]
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 41,
+            "column" : 13,
+            "source_fragment" : "= read_value + data; ..."
+          }
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.pro1.values"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.valueIndex"]
+            },
+            {
+              "type" : "field",
+              "value" : ["data", "d00"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 42,
+            "column" : 8,
+            "source_fragment" : "values.write((bit<32>)meta.valueIndex, data)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.pro2.read_action",
+      "id" : 13,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.valueIndex"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["scalars", "metadata.valueIndex"]
+                      },
+                      "right" : {
+                        "type" : "field",
+                        "value" : ["scalars", "metadata.offset"]
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 31,
+            "column" : 8,
+            "source_fragment" : "meta.valueIndex = meta.valueIndex + meta.offset"
+          }
+        },
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["data", "d01"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.pro2.values"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.valueIndex"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 32,
+            "column" : 8,
+            "source_fragment" : "values.read(data, (bit<32>)meta.valueIndex)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.pro2.write_action",
+      "id" : 14,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.pro2.values"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.valueIndex"]
+            },
+            {
+              "type" : "field",
+              "value" : ["data", "d01"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 35,
+            "column" : 8,
+            "source_fragment" : "values.write((bit<32>)meta.valueIndex, data)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.pro2.sum_read_action",
+      "id" : 15,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "pro2_read_value"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.pro2.values"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.valueIndex"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 40,
+            "column" : 8,
+            "source_fragment" : "values.read(read_value, (bit<32>)meta.valueIndex)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["data", "d01"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["scalars", "pro2_read_value"]
+                      },
+                      "right" : {
+                        "type" : "field",
+                        "value" : ["data", "d01"]
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 41,
+            "column" : 13,
+            "source_fragment" : "= read_value + data; ..."
+          }
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.pro2.values"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.valueIndex"]
+            },
+            {
+              "type" : "field",
+              "value" : ["data", "d01"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 42,
+            "column" : 8,
+            "source_fragment" : "values.write((bit<32>)meta.valueIndex, data)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.pro3.read_action",
+      "id" : 16,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.valueIndex"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["scalars", "metadata.valueIndex"]
+                      },
+                      "right" : {
+                        "type" : "field",
+                        "value" : ["scalars", "metadata.offset"]
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 31,
+            "column" : 8,
+            "source_fragment" : "meta.valueIndex = meta.valueIndex + meta.offset"
+          }
+        },
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["data", "d02"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.pro3.values"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.valueIndex"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 32,
+            "column" : 8,
+            "source_fragment" : "values.read(data, (bit<32>)meta.valueIndex)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.pro3.write_action",
+      "id" : 17,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.pro3.values"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.valueIndex"]
+            },
+            {
+              "type" : "field",
+              "value" : ["data", "d02"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 35,
+            "column" : 8,
+            "source_fragment" : "values.write((bit<32>)meta.valueIndex, data)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.pro3.sum_read_action",
+      "id" : 18,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "pro3_read_value"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.pro3.values"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.valueIndex"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 40,
+            "column" : 8,
+            "source_fragment" : "values.read(read_value, (bit<32>)meta.valueIndex)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["data", "d02"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["scalars", "pro3_read_value"]
+                      },
+                      "right" : {
+                        "type" : "field",
+                        "value" : ["data", "d02"]
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 41,
+            "column" : 13,
+            "source_fragment" : "= read_value + data; ..."
+          }
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.pro3.values"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.valueIndex"]
+            },
+            {
+              "type" : "field",
+              "value" : ["data", "d02"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 42,
+            "column" : 8,
+            "source_fragment" : "values.write((bit<32>)meta.valueIndex, data)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.pro4.read_action",
+      "id" : 19,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.valueIndex"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["scalars", "metadata.valueIndex"]
+                      },
+                      "right" : {
+                        "type" : "field",
+                        "value" : ["scalars", "metadata.offset"]
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 31,
+            "column" : 8,
+            "source_fragment" : "meta.valueIndex = meta.valueIndex + meta.offset"
+          }
+        },
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["data", "d03"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.pro4.values"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.valueIndex"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 32,
+            "column" : 8,
+            "source_fragment" : "values.read(data, (bit<32>)meta.valueIndex)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.pro4.write_action",
+      "id" : 20,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.pro4.values"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.valueIndex"]
+            },
+            {
+              "type" : "field",
+              "value" : ["data", "d03"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 35,
+            "column" : 8,
+            "source_fragment" : "values.write((bit<32>)meta.valueIndex, data)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.pro4.sum_read_action",
+      "id" : 21,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "register_read",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "pro4_read_value"]
+            },
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.pro4.values"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.valueIndex"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 40,
+            "column" : 8,
+            "source_fragment" : "values.read(read_value, (bit<32>)meta.valueIndex)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["data", "d03"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["scalars", "pro4_read_value"]
+                      },
+                      "right" : {
+                        "type" : "field",
+                        "value" : ["data", "d03"]
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 41,
+            "column" : 13,
+            "source_fragment" : "= read_value + data; ..."
+          }
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "MyIngress.pro4.values"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.valueIndex"]
+            },
+            {
+              "type" : "field",
+              "value" : ["data", "d03"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 42,
+            "column" : 8,
+            "source_fragment" : "values.write((bit<32>)meta.valueIndex, data)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.updateCABer.update_All",
+      "id" : 22,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_1"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["scalars", "metadata.valueIndex"]
+                      },
+                      "right" : {
+                        "type" : "field",
+                        "value" : ["scalars", "metadata.offset"]
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "updateCAB.p4",
+            "line" : 14,
+            "column" : 25,
+            "source_fragment" : "meta.valueIndex+meta.offset"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_2"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "|",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["scalars", "metadata.worker_bitmap_before"]
+                  },
+                  "right" : {
+                    "type" : "field",
+                    "value" : ["Multi", "bitmap"]
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "updateCAB.p4",
+            "line" : 14,
+            "column" : 53,
+            "source_fragment" : "bitmap"
+          }
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "bitmap_reg"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_1"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_2"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "updateCAB.p4",
+            "line" : 14,
+            "column" : 8,
+            "source_fragment" : "bitmap_reg.write(meta.valueIndex+meta.offset,bitmap)"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.counterNow"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "field",
+                        "value" : ["scalars", "metadata.counterNow"]
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x00000001"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "updateCAB.p4",
+            "line" : 16,
+            "column" : 8,
+            "source_fragment" : "meta.counterNow = meta.counterNow + 0x1"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_3"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "&",
+                  "left" : {
+                    "type" : "expression",
+                    "value" : {
+                      "op" : "+",
+                      "left" : {
+                        "type" : "expression",
+                        "value" : {
+                          "op" : "&",
+                          "left" : {
+                            "type" : "expression",
+                            "value" : {
+                              "op" : "+",
+                              "left" : {
+                                "type" : "field",
+                                "value" : ["scalars", "metadata.valueIndex"]
+                              },
+                              "right" : {
+                                "type" : "field",
+                                "value" : ["scalars", "metadata.offset"]
+                              }
+                            }
+                          },
+                          "right" : {
+                            "type" : "hexstr",
+                            "value" : "0xffffffff"
+                          }
+                        }
+                      },
+                      "right" : {
+                        "type" : "hexstr",
+                        "value" : "0x00000004"
+                      }
+                    }
+                  },
+                  "right" : {
+                    "type" : "hexstr",
+                    "value" : "0xffffffff"
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "updateCAB.p4",
+            "line" : 17,
+            "column" : 26,
+            "source_fragment" : "meta.valueIndex+meta.offset+4"
+          }
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "counter_reg"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "tmp_3"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.counterNow"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "updateCAB.p4",
+            "line" : 17,
+            "column" : 8,
+            "source_fragment" : "counter_reg.write(meta.valueIndex+meta.offset+4, meta.counterNow)"
+          }
+        },
+        {
+          "op" : "register_write",
+          "parameters" : [
+            {
+              "type" : "register_array",
+              "value" : "ECN_reg"
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.index"]
+            },
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.ECN"]
+            }
+          ],
+          "source_info" : {
+            "filename" : "updateCAB.p4",
+            "line" : 19,
+            "column" : 8,
+            "source_fragment" : "ECN_reg.write(meta.index,meta.ECN)"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MyIngress.updateCABer.send_Result",
+      "id" : 23,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["Multi", "bitmap"]
+            },
+            {
+              "type" : "expression",
+              "value" : {
+                "type" : "expression",
+                "value" : {
+                  "op" : "|",
+                  "left" : {
+                    "type" : "field",
+                    "value" : ["scalars", "metadata.worker_bitmap_before"]
+                  },
+                  "right" : {
+                    "type" : "field",
+                    "value" : ["Multi", "bitmap"]
+                  }
+                }
+              }
+            }
+          ],
+          "source_info" : {
+            "filename" : "updateCAB.p4",
+            "line" : 23,
+            "column" : 8,
+            "source_fragment" : "hdr.Multi.bitmap = meta.worker_bitmap_before | hdr.Multi.bitmap"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MultiAggregation75",
+      "id" : 24,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.dropflag"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00"
+            }
+          ],
+          "source_info" : {
+            "filename" : "MultiAggregation.p4",
+            "line" : 75,
+            "column" : 16,
+            "source_fragment" : "meta.dropflag = 0"
+          }
+        },
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.isACK"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x01"
+            }
+          ],
+          "source_info" : {
+            "filename" : "MultiAggregation.p4",
+            "line" : 76,
+            "column" : 16,
+            "source_fragment" : "meta.isACK = 1"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "check107",
+      "id" : 25,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.offset"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000000"
+            }
+          ],
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 107,
+            "column" : 16,
+            "source_fragment" : "meta.offset = 0"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "check110",
+      "id" : 26,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.offset"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000001"
+            }
+          ],
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 110,
+            "column" : 16,
+            "source_fragment" : "meta.offset = 1"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "check113",
+      "id" : 27,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.offset"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000002"
+            }
+          ],
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 113,
+            "column" : 16,
+            "source_fragment" : "meta.offset = 2"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "check116",
+      "id" : 28,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.offset"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x00000003"
+            }
+          ],
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 116,
+            "column" : 16,
+            "source_fragment" : "meta.offset = 3"
+          }
+        }
+      ]
+    },
+    {
+      "name" : "MultiAggregation90",
+      "id" : 29,
+      "runtime_data" : [],
+      "primitives" : [
+        {
+          "op" : "assign",
+          "parameters" : [
+            {
+              "type" : "field",
+              "value" : ["scalars", "metadata.dropflag"]
+            },
+            {
+              "type" : "hexstr",
+              "value" : "0x01"
+            }
+          ],
+          "source_info" : {
+            "filename" : "MultiAggregation.p4",
+            "line" : 90,
+            "column" : 32,
+            "source_fragment" : "meta.dropflag = 1"
+          }
+        }
+      ]
+    }
+  ],
+  "pipelines" : [
+    {
+      "name" : "ingress",
+      "id" : 0,
+      "source_info" : {
+        "filename" : "MultiAggregation.p4",
+        "line" : 16,
+        "column" : 8,
+        "source_fragment" : "MyIngress"
+      },
+      "init_table" : "node_2",
+      "tables" : [
+        {
+          "name" : "tbl_MultiAggregation75",
+          "id" : 0,
+          "source_info" : {
+            "filename" : "MultiAggregation.p4",
+            "line" : 75,
+            "column" : 30,
+            "source_fragment" : "= 0; ..."
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [24],
+          "actions" : ["MultiAggregation75"],
+          "base_default_next" : "node_25",
+          "next_tables" : {
+            "MultiAggregation75" : "node_25"
+          },
+          "default_entry" : {
+            "action_id" : 24,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "MyIngress.checker.readMultimd",
+          "id" : 1,
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 46,
+            "column" : 10,
+            "source_fragment" : "readMultimd"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "name" : "hdr.Multi.isACK",
+              "target" : ["Multi", "isACK"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [9, 0],
+          "actions" : ["MyIngress.checker.read_Multi_md", "NoAction"],
+          "base_default_next" : "node_6",
+          "next_tables" : {
+            "MyIngress.checker.read_Multi_md" : "node_6",
+            "NoAction" : "node_6"
+          },
+          "default_entry" : {
+            "action_id" : 0,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "tbl_check107",
+          "id" : 2,
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 107,
+            "column" : 28,
+            "source_fragment" : "="
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [25],
+          "actions" : ["check107"],
+          "base_default_next" : "node_8",
+          "next_tables" : {
+            "check107" : "node_8"
+          },
+          "default_entry" : {
+            "action_id" : 25,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "tbl_check110",
+          "id" : 3,
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 110,
+            "column" : 28,
+            "source_fragment" : "="
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [26],
+          "actions" : ["check110"],
+          "base_default_next" : "node_10",
+          "next_tables" : {
+            "check110" : "node_10"
+          },
+          "default_entry" : {
+            "action_id" : 26,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "tbl_check113",
+          "id" : 4,
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 113,
+            "column" : 28,
+            "source_fragment" : "="
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [27],
+          "actions" : ["check113"],
+          "base_default_next" : "node_12",
+          "next_tables" : {
+            "check113" : "node_12"
+          },
+          "default_entry" : {
+            "action_id" : 27,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "tbl_check116",
+          "id" : 5,
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 116,
+            "column" : 28,
+            "source_fragment" : "="
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [28],
+          "actions" : ["check116"],
+          "base_default_next" : "node_14",
+          "next_tables" : {
+            "check116" : "node_14"
+          },
+          "default_entry" : {
+            "action_id" : 28,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "MyIngress.pro1.add",
+          "id" : 6,
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 45,
+            "column" : 10,
+            "source_fragment" : "add"
+          },
+          "key" : [
+            {
+              "match_type" : "range",
+              "name" : "meta.worker_bitmap_before",
+              "target" : ["scalars", "metadata.worker_bitmap_before"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "meta.ifaggregation",
+              "target" : ["scalars", "metadata.ifaggregation"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "range",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [10, 11, 12, 1],
+          "actions" : ["MyIngress.pro1.read_action", "MyIngress.pro1.write_action", "MyIngress.pro1.sum_read_action", "NoAction"],
+          "base_default_next" : "MyIngress.pro2.add",
+          "next_tables" : {
+            "MyIngress.pro1.read_action" : "MyIngress.pro2.add",
+            "MyIngress.pro1.write_action" : "MyIngress.pro2.add",
+            "MyIngress.pro1.sum_read_action" : "MyIngress.pro2.add",
+            "NoAction" : "MyIngress.pro2.add"
+          },
+          "default_entry" : {
+            "action_id" : 1,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "MyIngress.pro2.add",
+          "id" : 7,
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 45,
+            "column" : 10,
+            "source_fragment" : "add"
+          },
+          "key" : [
+            {
+              "match_type" : "range",
+              "name" : "meta.worker_bitmap_before",
+              "target" : ["scalars", "metadata.worker_bitmap_before"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "meta.ifaggregation",
+              "target" : ["scalars", "metadata.ifaggregation"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "range",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [13, 14, 15, 2],
+          "actions" : ["MyIngress.pro2.read_action", "MyIngress.pro2.write_action", "MyIngress.pro2.sum_read_action", "NoAction"],
+          "base_default_next" : "MyIngress.pro3.add",
+          "next_tables" : {
+            "MyIngress.pro2.read_action" : "MyIngress.pro3.add",
+            "MyIngress.pro2.write_action" : "MyIngress.pro3.add",
+            "MyIngress.pro2.sum_read_action" : "MyIngress.pro3.add",
+            "NoAction" : "MyIngress.pro3.add"
+          },
+          "default_entry" : {
+            "action_id" : 2,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "MyIngress.pro3.add",
+          "id" : 8,
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 45,
+            "column" : 10,
+            "source_fragment" : "add"
+          },
+          "key" : [
+            {
+              "match_type" : "range",
+              "name" : "meta.worker_bitmap_before",
+              "target" : ["scalars", "metadata.worker_bitmap_before"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "meta.ifaggregation",
+              "target" : ["scalars", "metadata.ifaggregation"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "range",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [16, 17, 18, 3],
+          "actions" : ["MyIngress.pro3.read_action", "MyIngress.pro3.write_action", "MyIngress.pro3.sum_read_action", "NoAction"],
+          "base_default_next" : "MyIngress.pro4.add",
+          "next_tables" : {
+            "MyIngress.pro3.read_action" : "MyIngress.pro4.add",
+            "MyIngress.pro3.write_action" : "MyIngress.pro4.add",
+            "MyIngress.pro3.sum_read_action" : "MyIngress.pro4.add",
+            "NoAction" : "MyIngress.pro4.add"
+          },
+          "default_entry" : {
+            "action_id" : 3,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "MyIngress.pro4.add",
+          "id" : 9,
+          "source_info" : {
+            "filename" : "processor.p4",
+            "line" : 45,
+            "column" : 10,
+            "source_fragment" : "add"
+          },
+          "key" : [
+            {
+              "match_type" : "range",
+              "name" : "meta.worker_bitmap_before",
+              "target" : ["scalars", "metadata.worker_bitmap_before"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "meta.ifaggregation",
+              "target" : ["scalars", "metadata.ifaggregation"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "range",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [19, 20, 21, 4],
+          "actions" : ["MyIngress.pro4.read_action", "MyIngress.pro4.write_action", "MyIngress.pro4.sum_read_action", "NoAction"],
+          "base_default_next" : "MyIngress.updateCABer.updateAll",
+          "next_tables" : {
+            "MyIngress.pro4.read_action" : "MyIngress.updateCABer.updateAll",
+            "MyIngress.pro4.write_action" : "MyIngress.updateCABer.updateAll",
+            "MyIngress.pro4.sum_read_action" : "MyIngress.updateCABer.updateAll",
+            "NoAction" : "MyIngress.updateCABer.updateAll"
+          },
+          "default_entry" : {
+            "action_id" : 4,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "MyIngress.updateCABer.updateAll",
+          "id" : 10,
+          "source_info" : {
+            "filename" : "updateCAB.p4",
+            "line" : 26,
+            "column" : 10,
+            "source_fragment" : "updateAll"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "name" : "hdr.Multi.isACK",
+              "target" : ["Multi", "isACK"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [22, 5],
+          "actions" : ["MyIngress.updateCABer.update_All", "NoAction"],
+          "base_default_next" : "node_21",
+          "next_tables" : {
+            "MyIngress.updateCABer.update_All" : "node_21",
+            "NoAction" : "node_21"
+          },
+          "default_entry" : {
+            "action_id" : 5,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "MyIngress.updateCABer.sendResult",
+          "id" : 11,
+          "source_info" : {
+            "filename" : "updateCAB.p4",
+            "line" : 38,
+            "column" : 10,
+            "source_fragment" : "sendResult"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "name" : "hdr.Multi.isACK",
+              "target" : ["Multi", "isACK"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [23],
+          "actions" : ["MyIngress.updateCABer.send_Result"],
+          "base_default_next" : "node_23",
+          "next_tables" : {
+            "MyIngress.updateCABer.send_Result" : "node_23"
+          },
+          "default_entry" : {
+            "action_id" : 23,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        },
+        {
+          "name" : "tbl_MultiAggregation90",
+          "id" : 12,
+          "source_info" : {
+            "filename" : "MultiAggregation.p4",
+            "line" : 90,
+            "column" : 46,
+            "source_fragment" : "="
+          },
+          "key" : [],
+          "match_type" : "exact",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [29],
+          "actions" : ["MultiAggregation90"],
+          "base_default_next" : "node_25",
+          "next_tables" : {
+            "MultiAggregation90" : "node_25"
+          },
+          "default_entry" : {
+            "action_id" : 29,
+            "action_const" : true,
+            "action_data" : [],
+            "action_entry_const" : true
+          }
+        },
+        {
+          "name" : "MyIngress.ipv4_lpm",
+          "id" : 13,
+          "source_info" : {
+            "filename" : "MultiAggregation.p4",
+            "line" : 44,
+            "column" : 10,
+            "source_fragment" : "ipv4_lpm"
+          },
+          "key" : [
+            {
+              "match_type" : "exact",
+              "name" : "meta.dropflag",
+              "target" : ["scalars", "metadata.dropflag"],
+              "mask" : null
+            },
+            {
+              "match_type" : "exact",
+              "name" : "meta.isACK",
+              "target" : ["scalars", "metadata.isACK"],
+              "mask" : null
+            },
+            {
+              "match_type" : "lpm",
+              "name" : "hdr.ipv4.dstAddr",
+              "target" : ["ipv4", "dstAddr"],
+              "mask" : null
+            }
+          ],
+          "match_type" : "lpm",
+          "type" : "simple",
+          "max_size" : 1024,
+          "with_counters" : false,
+          "support_timeout" : false,
+          "direct_meters" : null,
+          "action_ids" : [7, 6, 8],
+          "actions" : ["MyIngress.ipv4_forward", "MyIngress.drop", "MyIngress.multicast"],
+          "base_default_next" : null,
+          "next_tables" : {
+            "MyIngress.ipv4_forward" : null,
+            "MyIngress.drop" : null,
+            "MyIngress.multicast" : null
+          },
+          "default_entry" : {
+            "action_id" : 6,
+            "action_const" : false,
+            "action_data" : [],
+            "action_entry_const" : false
+          }
+        }
+      ],
+      "action_profiles" : [],
+      "conditionals" : [
+        {
+          "name" : "node_2",
+          "id" : 0,
+          "source_info" : {
+            "filename" : "MultiAggregation.p4",
+            "line" : 71,
+            "column" : 11,
+            "source_fragment" : "hdr.Multi.isValid()"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "d2b",
+              "left" : null,
+              "right" : {
+                "type" : "field",
+                "value" : ["Multi", "$valid$"]
+              }
+            }
+          },
+          "true_next" : "node_3",
+          "false_next" : "node_25"
+        },
+        {
+          "name" : "node_3",
+          "id" : 1,
+          "source_info" : {
+            "filename" : "MultiAggregation.p4",
+            "line" : 73,
+            "column" : 15,
+            "source_fragment" : "hdr.Multi.isACK == 1"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "==",
+              "left" : {
+                "type" : "field",
+                "value" : ["Multi", "isACK"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x01"
+              }
+            }
+          },
+          "true_next" : "tbl_MultiAggregation75",
+          "false_next" : "MyIngress.checker.readMultimd"
+        },
+        {
+          "name" : "node_6",
+          "id" : 2,
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 106,
+            "column" : 15,
+            "source_fragment" : "meta.offset == 0001"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "==",
+              "left" : {
+                "type" : "field",
+                "value" : ["scalars", "metadata.offset"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x00000001"
+              }
+            }
+          },
+          "true_next" : "tbl_check107",
+          "false_next" : "node_8"
+        },
+        {
+          "name" : "node_8",
+          "id" : 3,
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 109,
+            "column" : 15,
+            "source_fragment" : "meta.offset == 0010"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "==",
+              "left" : {
+                "type" : "field",
+                "value" : ["scalars", "metadata.offset"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x0000000a"
+              }
+            }
+          },
+          "true_next" : "tbl_check110",
+          "false_next" : "node_10"
+        },
+        {
+          "name" : "node_10",
+          "id" : 4,
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 112,
+            "column" : 15,
+            "source_fragment" : "meta.offset == 0100"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "==",
+              "left" : {
+                "type" : "field",
+                "value" : ["scalars", "metadata.offset"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x00000064"
+              }
+            }
+          },
+          "true_next" : "tbl_check113",
+          "false_next" : "node_12"
+        },
+        {
+          "name" : "node_12",
+          "id" : 5,
+          "source_info" : {
+            "filename" : "check.p4",
+            "line" : 115,
+            "column" : 15,
+            "source_fragment" : "meta.isHigh != 0"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "!=",
+              "left" : {
+                "type" : "field",
+                "value" : ["scalars", "metadata.isHigh"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x00"
+              }
+            }
+          },
+          "true_next" : "tbl_check116",
+          "false_next" : "node_14"
+        },
+        {
+          "name" : "node_14",
+          "id" : 6,
+          "source_info" : {
+            "filename" : "MultiAggregation.p4",
+            "line" : 81,
+            "column" : 23,
+            "source_fragment" : "meta.ifaggregation == 0"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "==",
+              "left" : {
+                "type" : "field",
+                "value" : ["scalars", "metadata.ifaggregation"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x00000000"
+              }
+            }
+          },
+          "true_next" : "node_15",
+          "false_next" : "node_25"
+        },
+        {
+          "name" : "node_15",
+          "id" : 7,
+          "source_info" : {
+            "filename" : "MultiAggregation.p4",
+            "line" : 82,
+            "column" : 27,
+            "source_fragment" : "meta.counterNow < 2"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "<",
+              "left" : {
+                "type" : "field",
+                "value" : ["scalars", "metadata.counterNow"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x00000002"
+              }
+            }
+          },
+          "true_next" : "MyIngress.pro1.add",
+          "false_next" : "node_25"
+        },
+        {
+          "name" : "node_21",
+          "id" : 8,
+          "source_info" : {
+            "filename" : "updateCAB.p4",
+            "line" : 52,
+            "column" : 15,
+            "source_fragment" : "meta.counterNow == 2"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "==",
+              "left" : {
+                "type" : "field",
+                "value" : ["scalars", "metadata.counterNow"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x00000002"
+              }
+            }
+          },
+          "true_next" : "MyIngress.updateCABer.sendResult",
+          "false_next" : "node_23"
+        },
+        {
+          "name" : "node_23",
+          "id" : 9,
+          "source_info" : {
+            "filename" : "MultiAggregation.p4",
+            "line" : 89,
+            "column" : 31,
+            "source_fragment" : "meta.counterNow < 2"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "<",
+              "left" : {
+                "type" : "field",
+                "value" : ["scalars", "metadata.counterNow"]
+              },
+              "right" : {
+                "type" : "hexstr",
+                "value" : "0x00000002"
+              }
+            }
+          },
+          "true_next" : "tbl_MultiAggregation90",
+          "false_next" : "node_25"
+        },
+        {
+          "name" : "node_25",
+          "id" : 10,
+          "source_info" : {
+            "filename" : "MultiAggregation.p4",
+            "line" : 108,
+            "column" : 12,
+            "source_fragment" : "hdr.ipv4.isValid()"
+          },
+          "expression" : {
+            "type" : "expression",
+            "value" : {
+              "op" : "d2b",
+              "left" : null,
+              "right" : {
+                "type" : "field",
+                "value" : ["ipv4", "$valid$"]
+              }
+            }
+          },
+          "false_next" : null,
+          "true_next" : "MyIngress.ipv4_lpm"
+        }
+      ]
+    },
+    {
+      "name" : "egress",
+      "id" : 1,
+      "source_info" : {
+        "filename" : "MultiAggregation.p4",
+        "line" : 124,
+        "column" : 8,
+        "source_fragment" : "MyEgress"
+      },
+      "init_table" : null,
+      "tables" : [],
+      "action_profiles" : [],
+      "conditionals" : []
+    }
+  ],
+  "checksums" : [
+    {
+      "name" : "cksum",
+      "id" : 0,
+      "source_info" : {
+        "filename" : "MultiAggregation.p4",
+        "line" : 136,
+        "column" : 1,
+        "source_fragment" : "update_checksum( ..."
+      },
+      "target" : ["ipv4", "hdrChecksum"],
+      "type" : "generic",
+      "calculation" : "calc",
+      "verify" : false,
+      "update" : true,
+      "if_cond" : {
+        "type" : "expression",
+        "value" : {
+          "op" : "d2b",
+          "left" : null,
+          "right" : {
+            "type" : "field",
+            "value" : ["ipv4", "$valid$"]
+          }
+        }
+      }
+    }
+  ],
+  "force_arith" : [],
+  "extern_instances" : [],
+  "field_aliases" : [
+    [
+      "queueing_metadata.enq_timestamp",
+      ["standard_metadata", "enq_timestamp"]
+    ],
+    [
+      "queueing_metadata.enq_qdepth",
+      ["standard_metadata", "enq_qdepth"]
+    ],
+    [
+      "queueing_metadata.deq_timedelta",
+      ["standard_metadata", "deq_timedelta"]
+    ],
+    [
+      "queueing_metadata.deq_qdepth",
+      ["standard_metadata", "deq_qdepth"]
+    ],
+    [
+      "intrinsic_metadata.ingress_global_timestamp",
+      ["standard_metadata", "ingress_global_timestamp"]
+    ],
+    [
+      "intrinsic_metadata.egress_global_timestamp",
+      ["standard_metadata", "egress_global_timestamp"]
+    ],
+    [
+      "intrinsic_metadata.mcast_grp",
+      ["standard_metadata", "mcast_grp"]
+    ],
+    [
+      "intrinsic_metadata.egress_rid",
+      ["standard_metadata", "egress_rid"]
+    ],
+    [
+      "intrinsic_metadata.priority",
+      ["standard_metadata", "priority"]
+    ]
+  ],
+  "program" : "MultiAggregation.p4",
+  "__meta__" : {
+    "version" : [2, 23],
+    "compiler" : "https://github.com/p4lang/p4c"
+  }
+}
