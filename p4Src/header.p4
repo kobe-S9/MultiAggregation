@@ -11,10 +11,6 @@ typedef bit<8> value_t;
 #define register_size 4000
 
 
-// Define your registers
-register<bit<32>>(register_size) bitmap_reg;
-register<bit<32>>(register_size) counter_reg;
-register<bit<1>>(10) ECN_reg;
 
 
 
@@ -50,7 +46,7 @@ header udp_t {
 header Multi_h {
     bit<32>   bitmap;
     //bit<32>   SeqNum;
-    //bit<32>    fanInDegree;
+    bit<8>    fanInDegree;
     bit<1>    overflow;
     //bit<1>    isSWCollison;
     bit<1>    isResend;
@@ -66,6 +62,7 @@ header data_h {
     value_t d01;
     value_t d02;
     value_t d03;
+    value_t d04;
 }
 
 struct metadata {
@@ -79,7 +76,15 @@ struct metadata {
     bit<32> offset;
     bit<1> dropflag;
     bit<1> isACK;
+    bit<1> isResubmit;
+    bit<1> isSend;
     bit<4> isHigh;
+    @field_list(1)
+    bit<4> types;
+
+    bit<4>high;
+    bit<4>low;
+    bit<4>LOW;   
     
     bit<16> ingress_port;
     bit<16> egress_port;
@@ -92,6 +97,9 @@ struct headers {
     udp_t        udp;
     Multi_h      Multi;
     data_h       data;
+    data_h       high;
+    data_h       low;
+    data_h       LOW;
 }
 
 #endif /* _HEADERS_ */

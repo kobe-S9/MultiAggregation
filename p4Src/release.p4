@@ -1,24 +1,26 @@
-#ifndef _release_
-#define _release_
+#ifndef _Release_
+#define _Release_
 
 #include "header.p4"
 
-control release(
+control Release(
     inout headers hdr, 
     inout metadata meta) {
 
 
     action release_reg(){
+        counter_reg.write(meta.valueIndex,0);
+        counter_reg.write(meta.valueIndex+1,0);
+        counter_reg.write(meta.valueIndex+2,0);
+        counter_reg.write(meta.valueIndex+3,0);
 
-        bitmap_reg.write(meta.index, meta.bitmap);
+        bitmap_reg.write(meta.valueIndex,0);
+        bitmap_reg.write(meta.valueIndex+1,0);
+        bitmap_reg.write(meta.valueIndex+2,0);
+        bitmap_reg.write(meta.valueIndex+3,0);
 
-        meta.counterNow = meta.counterNow + 0x1;
-        counter_reg.write(meta.index, meta.counterNow);
-    }
-
-    action send_Result(){
-        hdr.Multi.bitmap = meta.bitmap;
-    }
+        ECN_reg.write(meta.valueIndex,0);
+    }  
 
     table release {
         key = {
@@ -28,7 +30,7 @@ control release(
             release_reg;
         }
         size = 1024;
-        default_action = noAction();
+        default_action = release_reg();
     }
 
 
@@ -39,4 +41,4 @@ control release(
     
 }
 
-#endif /* _release_ */
+#endif /* _Release_ */

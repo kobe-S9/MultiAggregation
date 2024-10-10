@@ -4,10 +4,12 @@ from scapy.fields import BitField, IntField
 import sys
 import threading
 
+
 class multi(Packet):
     name = "Multi"
     fields_desc = [
         IntField("bitmap", 0),
+        BitField("fanIndegree", 0, 8),
         BitField("overflow", 0, 1),
         BitField("isResend", 0, 1),
         BitField("ECN", 0, 1),
@@ -20,11 +22,40 @@ class multi(Packet):
 class Data(Packet):
     name = "data"
     fields_desc = [
-        IntField("d00", 0),
-        IntField("d01", 0),
-        IntField("d02", 0),
-        IntField("d03", 0)
+        BitField("d00",0,8),
+        BitField("d01",0,8),
+        BitField("d02",0,8),
+        BitField("d03",0,8),
+        BitField("d04",0,8)
     ]
+class Data(Packet):
+    name = "high"
+    fields_desc = [
+        BitField("d00",0,8),
+        BitField("d01",0,8),
+        BitField("d02",0,8),
+        BitField("d03",0,8),
+        BitField("d04",0,8)
+    ]
+class Data(Packet):
+    name = "low"
+    fields_desc = [
+        BitField("d00",0,8),
+        BitField("d01",0,8),
+        BitField("d02",0,8),
+        BitField("d03",0,8),
+        BitField("d04",0,8)
+    ]
+class Data(Packet):
+    name = "LOW"
+    fields_desc = [
+        BitField("d00",0,8),
+        BitField("d01",0,8),
+        BitField("d02",0,8),
+        BitField("d03",0,8),
+        BitField("d04",0,8)
+    ]
+
 
 bind_layers(UDP, multi)
 bind_layers(multi, Data)
@@ -36,6 +67,9 @@ class receiver(object):
 
     def packet_callback(self, packet):
         if packet.haslayer(multi):
+            raw_data = raw(packet)
+            print("raw_data:",raw_data)
+
             print("Received Multi packet:")
             packet.show()
             multi_layer = packet.getlayer(multi)
