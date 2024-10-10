@@ -2,12 +2,9 @@
 #include <core.p4>
 #include <v1model.p4>
 #include "header.p4"
-//#include "check.p4"
 #include "parser.p4"
 #include "processor.p4"
-//#include "updateCAB.p4"
-//#include "Highest.p4"
-//#include "release.p4"
+
 
 /*************************************************************************
 **************  I N G R E S S   P R O C E S S I N G   *******************
