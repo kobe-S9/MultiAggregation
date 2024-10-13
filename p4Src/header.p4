@@ -75,16 +75,17 @@ struct metadata {
     bit<1> ECN;
     bit<32> offset;
     bit<1> dropflag;
+    bit<1> firstPacket;
+    @field_list(1)
     bit<1> isACK;
     bit<1> isResubmit;
     bit<1> isSend;
-    bit<4> isHigh;
-    @field_list(1)
+
     bit<4> types;
 
     bit<4>high;
-    bit<4>low;
-    bit<4>LOW;   
+    bit<4>Low;
+    bit<4>Lowest;   
     
     bit<16> ingress_port;
     bit<16> egress_port;
@@ -98,8 +99,8 @@ struct headers {
     Multi_h      Multi;
     data_h       data;
     data_h       high;
-    data_h       low;
-    data_h       LOW;
+    data_h       Low;
+    data_h       Lowest;
 }
 
 #endif /* _HEADERS_ */

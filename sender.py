@@ -33,8 +33,6 @@ class Data(Packet):
 bind_layers(UDP, multi)
 bind_layers(multi, Data)
 
-
-
 class sender(object):
     def __init__(self,src_ip,interface,types, bitmap,payload = [],fanIndegree = 2,index = 0,src_port = 12345, dst_port = 12345,  dst_ip = "10.0.0.3"):
         self.src_ip = src_ip
@@ -164,5 +162,11 @@ if __name__ == "__main__":
         print("item",item)
         payload= [row[item] for row in split_result]
         print("payload",payload)
-        sender1 = sender(payload = payload,types= item,index = 0,src_ip=src_ip,bitmap=bitmap,interface=interface)
+        if(item == 3):
+            types = 1
+        if(item == 2):
+            types = 2   
+        if(item == 1):
+            types = 4               
+        sender1 = sender(payload = payload,types= types,index = 0,src_ip=src_ip,bitmap=bitmap,interface=interface)
         sender1.run()

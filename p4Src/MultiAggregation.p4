@@ -14,14 +14,13 @@ control MyIngress(inout headers hdr,
                   inout metadata meta,
                   inout standard_metadata_t standard_metadata) {
 
-bit<32> bitmapResult = 0x0;
 
 // Define your registers
 register<bit<32>>(register_size) bitmap_reg;
-register<bit<32>>(register_size) counter_reg;
+register<bit<32>>(register_size) counter_reg;//可以改成8位与fanIndegree对齐
 register<bit<1>>(10) ECN_reg;
 register<bit<8>>(register_size) fanInDegree_reg;
-
+register<bit<32>>(register_size) fanInDegree_bitmap_reg;
 //转发和丢弃    
     action drop() {
         mark_to_drop(standard_metadata);
@@ -68,9 +67,10 @@ register<bit<8>>(register_size) fanInDegree_reg;
         bit<32>   bitmapR;
         bit<32>   counterR;
         bit<1>    ECNR;
-        bit<32>   SeqNumR;
-
-        meta.isHigh = hdr.Multi.types & 4w8;
+        bit<32>   bitmap0;
+        bit<32>   bitmap1;
+        bit<32>   bitmap2;
+        
         meta.index = hdr.Multi.index;
         meta.isACK = hdr.Multi.isACK;
         meta.valueIndex = hdr.Multi.index * 4;
@@ -80,6 +80,16 @@ register<bit<8>>(register_size) fanInDegree_reg;
         meta.worker_bitmap_before = bitmapR;
         meta.ifaggregation = bitmapR & hdr.Multi.bitmap;
         
+        bitmap_reg.read(bitmapR, meta.valueIndex);
+        bitmap_reg.read(bitmap0, meta.valueIndex + 1);
+        bitmap_reg.read(bitmap1, meta.valueIndex + 2);
+        bitmap_reg.read(bitmap2, meta.valueIndex + 3);
+
+        bitmapR = bitmapR | bitmap0 | bitmap1 | bitmap2;
+        if(bitmapR > 0){
+            meta.firstPacket = 1;
+        }
+
         counter_reg.read(counterR, meta.valueIndex+meta.offset);
         meta.counterNow = counterR;
 
@@ -109,53 +119,11 @@ register<bit<8>>(register_size) fanInDegree_reg;
         bit<32>bitmap;
         bitmap = meta.worker_bitmap_before | hdr.Multi.bitmap;
         bitmap_reg.write(meta.valueIndex+meta.offset,bitmap);
-
+        
         meta.counterNow = meta.counterNow + 0x1;
         counter_reg.write(meta.valueIndex+meta.offset, meta.counterNow);
 
         ECN_reg.write(meta.index,meta.ECN);
-    }
-
-    action send_Check(){
-        bit<32> c1;
-        bit<32> c2;
-        bit<32> c3;
-        bit<32> c4;
-
-        bit<8> f1;
-        bit<8> f2;
-        bit<8> f3;
-        bit<8> f4;
-
-        counter_reg.read(c1,meta.valueIndex);
-        counter_reg.read(c2,meta.valueIndex+1);
-        counter_reg.read(c3,meta.valueIndex+2);
-        counter_reg.read(c4,meta.valueIndex+3);
-
-        fanInDegree_reg.read(f1,meta.valueIndex);
-        fanInDegree_reg.read(f2,meta.valueIndex+1);
-        fanInDegree_reg.read(f3,meta.valueIndex+2);
-        fanInDegree_reg.read(f4,meta.valueIndex+3);
-
-        if(c1 == (bit<32>)f1 && c2 == (bit<32>)f2 && c3 == (bit<32>)f3 && c4 == (bit<32>)f4){
-            meta.isSend = 1;
-            meta.dropflag = 0;
-            hdr.Multi.bitmap = meta.worker_bitmap_before | hdr.Multi.bitmap;//只有一个不完全.
-            meta.types = 4w8;
-            if(c2>0){
-                meta.types = meta.types |4w4;
-            }
-            if(c3>0){
-                meta.types = meta.types |4w2;
-            }
-            if(c4>0){
-                meta.types = meta.types |4w1;
-            }
-            hdr.Multi.types = meta.types;
-        }else{
-            meta.isSend = 0;
-            meta.dropflag = 1;
-        }
     }
 
     table updateAll {
@@ -170,21 +138,6 @@ register<bit<8>>(register_size) fanInDegree_reg;
         default_action = NoAction();
     }
 
-
-
-    table sendCheck {
-        key = {
-            hdr.Multi.isACK : exact;
-        }
-        actions = {
-            send_Check;
-        }
-        size = 1024;
-        default_action = send_Check();
-    }
-
-
-
 //release
 
     action release_reg(){
@@ -198,7 +151,13 @@ register<bit<8>>(register_size) fanInDegree_reg;
         bitmap_reg.write(meta.valueIndex+2,0);
         bitmap_reg.write(meta.valueIndex+3,0);
 
-        ECN_reg.write(meta.valueIndex,0);
+        fanInDegree_bitmap_reg.write(meta.valueIndex,0);
+        fanInDegree_bitmap_reg.write(meta.valueIndex+1,0);
+        fanInDegree_bitmap_reg.write(meta.valueIndex+2,0);
+        fanInDegree_bitmap_reg.write(meta.valueIndex+3,0);       
+        
+
+        ECN_reg.write(meta.index,0);
     }  
 
     table release {
@@ -211,14 +170,7 @@ register<bit<8>>(register_size) fanInDegree_reg;
         size = 1024;
         default_action = release_reg();
     }
-
-
-
-    //Check() checker;
-    //Highest() Highester;
     Processor() pro;
-    //updateCAB() updateCABer;
-    //Release() releaser;
 //初始化
 
     apply {
@@ -234,69 +186,114 @@ register<bit<8>>(register_size) fanInDegree_reg;
             }else{
             //checkBitmap.apply();
                 meta.offset = (bit<32>)(hdr.Multi.types & 4w7);
-
+                if(hdr.Multi.types == 4w1){
+                    meta.offset = 3;
+                }
+                if(hdr.Multi.types == 4w2){
+                    meta.offset = 2;
+                }
+                if(hdr.Multi.types == 4w4){
+                    meta.offset = 1;
+                }
                 if(hdr.Multi.types > 7){
                     meta.offset = 0;
                     meta.types = hdr.Multi.types;
                     meta.high = meta.types & 4w4;
-                    meta.low = meta.types & 4w2;
-                    meta.LOW = meta.types & 4w1;
-                }
-                readMultimd.apply();    
-                meta.isResubmit = 0;                    
+                    meta.Low = meta.types & 4w2;
+                    meta.Lowest = meta.types & 4w1;
+                }              
                 if(standard_metadata.instance_type == 6){
+                    bit<32>bitmap;
+                    bitmap_reg.read(bitmap, hdr.Multi.index);
+                    hdr.Multi.bitmap = bitmap;
                     meta.isResubmit = 1;
-                    hdr.Multi.types = meta.types;
-                    meta.high = meta.types & 4w4;
-                    meta.low = meta.types & 4w2;
-                    meta.LOW = meta.types & 4w1;
-                    pro.apply(meta,hdr);
+
+                    hdr.Multi.isACK = 0;//改成聚合完成flag
                     meta.ifaggregation = 1;
                     meta.isSend = 1;
                     meta.dropflag = 0;
+                    pro.apply(meta,hdr);
+                }else{
+                    readMultimd.apply();    
+                    meta.isResubmit = 0;  
+                
                 }
                 //检查位图和计数器判断下一个动作
                     if(meta.ifaggregation == 0){
-                        if(meta.counterNow < 2 )//为2是因为这里的网络拓扑只设置了2个工作节点。
-                        {
-                            pro.apply(meta,hdr);
-                            //高位包
-                            if(hdr.Multi.types > 7){
-                                bit<32> index;
-                                fanInDegree_reg.write(meta.valueIndex,hdr.Multi.fanInDegree);
-                                if(meta.high != 0){
-                                    index = meta.valueIndex+1;
-                                    bit<8> fanInDegree;
-                                    fanInDegree_reg.read(fanInDegree,index);
-                                    fanInDegree = fanInDegree + 1;
-                                    fanInDegree_reg.write(index,fanInDegree);
-                                }
-                                if(meta.low != 0){
-                                    index = meta.valueIndex+2;
-                                    bit<8> fanInDegree;
-                                    fanInDegree_reg.read(fanInDegree,index);
-                                    fanInDegree = fanInDegree + 1;
-                                    fanInDegree_reg.write(index,fanInDegree);
-                                }
-                                if(meta.LOW != 0){
-                                    index = meta.valueIndex+3;
-                                    bit<8> fanInDegree;
-                                    fanInDegree_reg.read(fanInDegree,index);
-                                    fanInDegree = fanInDegree + 1;
-                                    fanInDegree_reg.write(index,fanInDegree);
-                                }   
+                        pro.apply(meta,hdr);
+                        //高位包
+                        if(hdr.Multi.types > 7){
+                            bit<32> index;
+                            bit<8> fanInDegree;
+                            bit<32> bitmap;
+
+                            fanInDegree_reg.write(meta.valueIndex,hdr.Multi.fanInDegree);
+
+                            if(meta.high != 0){//次高位更新faInDegree
+                                index = meta.valueIndex+1;
+                                fanInDegree_reg.read(fanInDegree,index);
+                                fanInDegree = fanInDegree + 1;
+                                fanInDegree_reg.write(index,fanInDegree);
+
+                                fanInDegree_bitmap_reg.read(bitmap,index);
+                                bitmap = bitmap |hdr.Multi.bitmap;
+                                fanInDegree_bitmap_reg.write(index,bitmap);
                             }
-                                updateAll.apply();
-                                sendCheck.apply();
-                                if(meta.isSend == 1 && meta.isResubmit == 0){
-                                    hdr.Multi.types = meta.types;
-                                    resubmit_preserving_field_list(1);
-                                }
-                        }else{
-                            //该工作节点的包没有聚合过，但显示已经聚合完成，说明了什么？要实现什么功能？
-                            //worker重发
-                        
+                            if(meta.Low != 0){
+                                index = meta.valueIndex+2;
+                                fanInDegree_reg.read(fanInDegree,index);
+                                fanInDegree = fanInDegree + 1;
+                                fanInDegree_reg.write(index,fanInDegree);
+
+                                fanInDegree_bitmap_reg.read(bitmap,index);
+                                bitmap = bitmap |hdr.Multi.bitmap;
+                                fanInDegree_bitmap_reg.write(index,bitmap);
+                            }
+                            if(meta.Lowest != 0){
+                                index = meta.valueIndex+3;
+                                fanInDegree_reg.read(fanInDegree,index);
+                                fanInDegree = fanInDegree + 1;
+                                fanInDegree_reg.write(index,fanInDegree);
+
+                                fanInDegree_bitmap_reg.read(bitmap,index);
+                                bitmap = bitmap |hdr.Multi.bitmap;
+                                fanInDegree_bitmap_reg.write(index,bitmap);
+                            }   
                         }
+                            updateAll.apply();
+                            //sendCheck.apply();
+                            bit<32> c1;
+                            bit<32> c2;
+                            bit<32> c3;
+                            bit<32> c4;
+
+                            bit<8> f1;
+                            bit<8> f2;
+                            bit<8> f3;
+                            bit<8> f4;
+
+                            counter_reg.read(c1,meta.valueIndex);
+                            counter_reg.read(c2,meta.valueIndex+1);
+                            counter_reg.read(c3,meta.valueIndex+2);
+                            counter_reg.read(c4,meta.valueIndex+3);
+
+                            fanInDegree_reg.read(f1,meta.valueIndex);
+                            fanInDegree_reg.read(f2,meta.valueIndex+1);
+                            fanInDegree_reg.read(f3,meta.valueIndex+2);
+                            fanInDegree_reg.read(f4,meta.valueIndex+3);
+
+                            if(c1 == (bit<32>)f1 && c2 == (bit<32>)f2 && c3 == (bit<32>)f3 && c4 == (bit<32>)f4){//聚合完成时发送
+                                meta.isSend = 1;
+                                meta.dropflag = 0;
+                              
+                            }else{
+                                meta.isSend = 0;
+                                meta.dropflag = 1;
+                                 meta.isACK = 0;
+                            }
+                            if(meta.isSend == 1 && meta.isResubmit == 0){
+                                resubmit_preserving_field_list(1);
+                            }
 
                     }else{
                         //已经聚合过则ECN = pck.ecn(没有实现）然后drop
@@ -369,8 +366,8 @@ control MyDeparser(packet_out packet, in headers hdr) {
         packet.emit(hdr.data);
 
         packet.emit(hdr.high);
-        packet.emit(hdr.low);
-        packet.emit(hdr.LOW);
+        packet.emit(hdr.Low);
+        packet.emit(hdr.Lowest);
 
         
 

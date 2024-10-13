@@ -11,108 +11,151 @@ control Processor(
 
 
 
-    //register<bit<8>>(register_size) values;
+    //register<bit<32>>(register_size) values;
 
-    register<bit<8>>(register_size) values0;//data0
-    register<bit<8>>(register_size) values1;//d1
-    register<bit<8>>(register_size) values2;//d2
-    register<bit<8>>(register_size) values3;//d3
-    register<bit<8>>(register_size) values4;//d4
+    register<bit<32>>(register_size) values0;//data0
+    register<bit<32>>(register_size) values1;//d1
+    register<bit<32>>(register_size) values2;//d2
+    register<bit<32>>(register_size) values3;//d3
+    register<bit<32>>(register_size) values4;//d4
 
-/*
-    action read_action() {
-        meta.valueIndex = meta.valueIndex + meta.offset;
-        values.read(data, (bit<32>)meta.valueIndex);
-    }
-    action write_action() {
-        values.write((bit<32>)meta.valueIndex, data);
-    }
-
-    action sum_read_action() {
-        bit<8>read_value;
-        values.read(read_value, (bit<32>)meta.valueIndex);
-        data = read_value + data;
-        values.write((bit<32>)meta.valueIndex, data);
-    }
-
-    table add {
-        key = {
-            meta.worker_bitmap_before:range;
-            meta.ifaggregation:exact;
-        }
-        actions = {
-            read_action;
-            write_action;
-            sum_read_action;
-            NoAction;
-        }
-        size = 1024;
-        default_action = NoAction();
-    }
-*/
     apply {
-            if(meta.ifaggregation == 0)
-            {
-                if(meta.worker_bitmap_before == 0){
-                    values0.write(meta.valueIndex+meta.offset, hdr.data.d00);
-                    values1.write(meta.valueIndex+meta.offset, hdr.data.d01);
-                    values2.write(meta.valueIndex+meta.offset, hdr.data.d02);
-                    values3.write(meta.valueIndex+meta.offset, hdr.data.d03);
-                    values4.write(meta.valueIndex+meta.offset, hdr.data.d04);                    
-                }
-                if(meta.worker_bitmap_before > 0 && meta.worker_bitmap_before < 4294967295){
-                    bit<8>read_value;
+            bit<32> d00 =(bit<32>) hdr.data.d00;
+            bit<32> d01 =(bit<32>) hdr.data.d01;
+            bit<32> d02 =(bit<32>) hdr.data.d02;
+            bit<32> d03 =(bit<32>) hdr.data.d03;
+            bit<32> d04 =(bit<32>) hdr.data.d04;
 
-                    values0.read(read_value, meta.valueIndex+meta.offset);
-                    values0.write((bit<32>)meta.valueIndex+meta.offset, hdr.data.d00+read_value);
-
-                    values1.read(read_value, meta.valueIndex+meta.offset);
-                    values1.write((bit<32>)meta.valueIndex+meta.offset, hdr.data.d01+read_value);
-
-                    values2.read(read_value, meta.valueIndex+meta.offset);
-                    values2.write((bit<32>)meta.valueIndex+meta.offset, hdr.data.d02+read_value);
-
-                    values3.read(read_value, meta.valueIndex+meta.offset);
-                    values3.write((bit<32>)meta.valueIndex+meta.offset, hdr.data.d03+read_value);
-
-                    values4.read(read_value, meta.valueIndex+meta.offset);
-                    values4.write((bit<32>)meta.valueIndex+meta.offset, hdr.data.d04+read_value);                    
-                }
-            }
             if(meta.isResubmit == 1){
-                values0.read(hdr.data.d00,meta.valueIndex);
-                values1.read(hdr.data.d01,meta.valueIndex);
-                values2.read(hdr.data.d02,meta.valueIndex);
-                values3.read(hdr.data.d03,meta.valueIndex);
-                values4.read(hdr.data.d04,meta.valueIndex);
+                //取数
+                values0.read(d00,meta.index);
+                values1.read(d01,meta.index);
+                values2.read(d02,meta.index);
+                values3.read(d03,meta.index);
+                values4.read(d04,meta.index);
+
+                //取高8位
+                hdr.data.d00 = (bit<8>)(d00 >> 24);
+                hdr.data.d01 = (bit<8>)(d01 >> 24);
+                hdr.data.d02 = (bit<8>)(d02 >> 24);
+                hdr.data.d03 = (bit<8>)(d03 >> 24);
+                hdr.data.d04 = (bit<8>)(d04 >> 24);
+
+                //high
+                hdr.high.setValid();
+                hdr.high.d00 = (bit<8>)((d00 >> 16) & 0xFF);
+                hdr.high.d01 = (bit<8>)((d01 >> 16) & 0xFF);
+                hdr.high.d02 = (bit<8>)((d02 >> 16) & 0xFF);
+                hdr.high.d03 = (bit<8>)((d03 >> 16) & 0xFF);
+                hdr.high.d04 = (bit<8>)((d04 >> 16) & 0xFF);
 
 
-                if(meta.high != 0){
-                    hdr.high.setValid();
-                    values0.read(hdr.high.d00,meta.valueIndex+1);
-                    values1.read(hdr.high.d01,meta.valueIndex+1);
-                    values2.read(hdr.high.d02,meta.valueIndex+1);
-                    values3.read(hdr.high.d03,meta.valueIndex+1);
-                    values4.read(hdr.high.d04,meta.valueIndex+1);
+                hdr.Low.setValid();
+                hdr.Low.d00 = (bit<8>)((d00 >> 8) & 0xFF);
+                hdr.Low.d01 = (bit<8>)((d01 >> 8) & 0xFF);
+                hdr.Low.d02 = (bit<8>)((d02 >> 8) & 0xFF);
+                hdr.Low.d03 = (bit<8>)((d03 >> 8) & 0xFF);
+                hdr.Low.d04 = (bit<8>)((d04 >> 8) & 0xFF);
+
+                hdr.Lowest.setValid();
+                hdr.Lowest.d00 = (bit<8>)(d00 & 0xFF);
+                hdr.Lowest.d01 = (bit<8>)(d01 & 0xFF);
+                hdr.Lowest.d02 = (bit<8>)(d02 & 0xFF);
+                hdr.Lowest.d03 = (bit<8>)(d03 & 0xFF);
+                hdr.Lowest.d04 = (bit<8>)(d04 & 0xFF);
+
+                //更新字节长度
+                hdr.udp.length = hdr.udp.length + 15;
+                hdr.ipv4.totalLen = hdr.ipv4.totalLen + 15;
+     
+            }else{
+                if(meta.offset == 0){//高8位
+                    d00 = d00 << 24;
+                    d01 = d01 << 24;
+                    d02 = d02 << 24;
+                    d03 = d03 << 24;
+                    d04 = d04 << 24;
                 }
 
-                if(meta.low != 0){
-                    hdr.low.setValid();
-                    values0.read(hdr.low.d00,meta.valueIndex+2);
-                    values1.read(hdr.low.d01,meta.valueIndex+2);
-                    values2.read(hdr.low.d02,meta.valueIndex+2);
-                    values3.read(hdr.low.d03,meta.valueIndex+2);
-                    values4.read(hdr.low.d04,meta.valueIndex+2);
+                if(meta.offset == 1){//次高8位
+                    d00 = d00 << 16;
+                    d01 = d01 << 16;
+                    d02 = d02 << 16;
+                    d03 = d03 << 16;
+                    d04 = d04 << 16;
                 }
 
-                if(meta.LOW != 0){
-                    hdr.LOW.setValid();
-                    values0.read(hdr.LOW.d00,meta.valueIndex+3);
-                    values1.read(hdr.LOW.d01,meta.valueIndex+3);
-                    values2.read(hdr.LOW.d02,meta.valueIndex+3);
-                    values3.read(hdr.LOW.d03,meta.valueIndex+3);
-                    values4.read(hdr.LOW.d04,meta.valueIndex+3);
-                }               
+                if(meta.offset == 2){//次低8位
+                    d00 = d00 << 8;
+                    d01 = d01 << 8;
+                    d02 = d02 << 8;
+                    d03 = d03 << 8;
+                    d04 = d04 << 8;
+                }
+
+                if(meta.firstPacket == 0){//first
+                    values0.write(meta.index, d00);
+                    values1.write(meta.index, d01);
+                    values2.write(meta.index, d02);
+                    values3.write(meta.index, d03);
+                    values4.write(meta.index, d04);                    
+                }else{
+
+                    bit<32>read_value;
+                    bit<32>carry;
+                    bit<64>sum;
+
+                    //d00
+                    values0.read(read_value, meta.index);
+                    sum = (bit<64>)read_value + (bit<64>)d00;
+                    carry =(bit<32>) (sum >> 32);
+                    if(carry > 0){//溢出
+                        values0.write(meta.index, 0xffffffff);
+                    }else{
+                        values0.write(meta.index, (bit<32>)sum);
+                    }
+
+                    //d01
+                    values1.read(read_value, meta.index);
+                    sum = (bit<64>)read_value + (bit<64>)d01;
+                    carry =(bit<32>) (sum >> 32);
+                    if(carry > 0){
+                        values1.write(meta.index, 0xffffffff);
+                    }else{
+                        values1.write(meta.index, (bit<32>)sum);
+                    }
+
+                    //d02
+                    values2.read(read_value, meta.index);
+                    sum = (bit<64>)read_value + (bit<64>)d02;
+                    carry =(bit<32>) (sum >> 32);
+                    if(carry > 0){
+                        values2.write(meta.index, 0xffffffff);
+                    }else{
+                        values2.write(meta.index, (bit<32>)sum);
+                    }
+
+                    //d03
+                    values3.read(read_value, meta.index);
+                    sum = (bit<64>)read_value + (bit<64>)d03;
+                    carry =(bit<32>) (sum >> 32);
+                    if(carry > 0){
+                        values3.write(meta.index, 0xffffffff);
+                    }else{
+                        values3.write(meta.index, (bit<32>)sum);
+                    }
+
+                    //d04
+                    values4.read(read_value, meta.index);
+                    sum = (bit<64>)read_value + (bit<64>)d04;
+                    carry =(bit<32>) (sum >> 32);
+                    if(carry > 0){
+                        values4.write(meta.index, 0xffffffff);
+                    }else{
+                        values4.write(meta.index, (bit<32>)sum);
+                    }
+
+                }
             }
        
             
